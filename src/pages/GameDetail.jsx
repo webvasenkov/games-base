@@ -1,17 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDetail } from '../redux/reducers/game';
+import { ReactComponent as PC } from '../assets/pc.svg';
+import { ReactComponent as PlayStation } from '../assets/play-station.svg';
+import { ReactComponent as Xbox } from '../assets/xbox.svg';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 const GameDetail = ({ gameId }) => {
   const dispatch = useDispatch();
+  const { detail, screenshots } = useSelector(({ game }) => game);
+  const [platforms, setPlatforms] = useState([]);
 
   useEffect(() => {
     dispatch(getDetail(gameId));
   }, [dispatch, gameId]);
 
-  const { detail, screenshots } = useSelector(({ game }) => game);
+  useEffect(() => {
+    const platform = new Set();
+
+    if (detail) {
+      detail.platforms.forEach(({ platform: item }) => {
+        const words = item.name.split(' ');
+        platform.add(words[0].toLowerCase());
+      });
+
+      setPlatforms([...platform]);
+    }
+  }, [detail]);
 
   if (!detail || !screenshots) {
     return 'Loading';
@@ -24,12 +40,22 @@ const GameDetail = ({ gameId }) => {
         <Hero>
           <Title>{detail.name}</Title>
           <span>{detail.rating}</span>
+
+          <Platforms>
+            {platforms.map((platform) => {
+              switch (platform) {
+                case 'pc':
+                  return <PC />;
+                case 'playstation':
+                  return <PlayStation />;
+                case 'xbox':
+                  return <Xbox />;
+                default:
+                  return <></>;
+              }
+            })}
+          </Platforms>
         </Hero>
-        <Platforms>
-          {detail.platforms.map((platform) => (
-            <span key={platform.id}>{platform.name}</span>
-          ))}
-        </Platforms>
       </Overlay>
       <About>
         <AboutTitle>About</AboutTitle>
@@ -75,6 +101,7 @@ const Hero = styled.div`
   right: 0;
   bottom: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
@@ -83,7 +110,13 @@ const Title = styled.h3`
   font-size: 5rem;
 `;
 
-const Platforms = styled.div``;
+const Platforms = styled.div`
+  svg {
+    fill: #222;
+    height: 2em;
+    margin: 1em;
+  }
+`;
 const About = styled.div``;
 const AboutTitle = styled.h4`
   font-size: 2.5rem;
