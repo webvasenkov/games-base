@@ -7,7 +7,7 @@ const instance = axios.create({
 
 class API {
   popularGames() {
-    return instance(`games?dates=${lastYear},${currentDate}&ordering=-raring&page_size=10`);
+    return instance(`games?dates=${lastYear},${currentDate}&page_size=10`);
   }
 
   noveltyGames() {
@@ -16,6 +16,14 @@ class API {
 
   upcomingGames() {
     return instance(`games?dates=${lastYear},${currentDate}&ordering=-released&page_size=10`);
+  }
+
+  gameDetails(id) {
+    return instance(`games/${id}`);
+  }
+
+  gameScreenshots(id) {
+    return instance(`games/${id}/screenshots`);
   }
 }
 

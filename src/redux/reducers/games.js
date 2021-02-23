@@ -1,8 +1,9 @@
 import { api } from '../../api';
 
-const FETCH_GAMES = 'games/fetch_games';
+const FETCH = 'games/fetch';
 
 const initialState = {
+  all: [],
   popular: [],
   novelty: [],
   upcoming: [],
@@ -10,10 +11,11 @@ const initialState = {
 
 const games = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_GAMES: {
+    case FETCH: {
       const payload = (key) => ({ [key]: action.payload[key] });
       return {
         ...state,
+        ...payload('all'),
         ...payload('popular'),
         ...payload('novelty'),
         ...payload('upcoming'),
@@ -27,7 +29,7 @@ const games = (state = initialState, action) => {
 export default games;
 
 const fetchGames = (payload) => ({
-  type: FETCH_GAMES,
+  type: FETCH,
   payload,
 });
 
@@ -37,6 +39,7 @@ export const getGames = () => async (dispatch) => {
   const upcoming = await api.upcomingGames();
 
   const payload = {
+    all: [...popular.data.results, ...novelty.data.results, ...upcoming.data.results],
     popular: popular.data.results,
     novelty: novelty.data.results,
     upcoming: upcoming.data.results,
