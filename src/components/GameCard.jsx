@@ -32,6 +32,7 @@ const Game = styled(motion.div)`
   border: 1px solid #eee;
   background: #fff;
   transition: all 0.25s ease-in-out;
+  overflow: hidden;
   cursor: pointer;
 
   img {
@@ -55,7 +56,6 @@ const Game = styled(motion.div)`
 
 const ImageWrapper = styled.div`
   overflow: hidden;
-  border-radius: 1em 1em 0 0;
 `;
 
 const GameDescription = styled.div`

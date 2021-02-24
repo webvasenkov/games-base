@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDetail } from '../redux/reducers/game';
-import { ReactComponent as PC } from '../assets/pc.svg';
+import { ReactComponent as Windows } from '../assets/windows.svg';
 import { ReactComponent as PlayStation } from '../assets/play-station.svg';
 import { ReactComponent as Xbox } from '../assets/xbox.svg';
-import { motion } from 'framer-motion';
+import { ReactComponent as Star } from '../assets/star.svg';
+import { ReactComponent as StarEmpty } from '../assets/star-empty.svg';
+import { imageResize } from '../util';
+import Preloader from '../components/Preloader';
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 const GameDetail = ({ gameId }) => {
   const dispatch = useDispatch();
-  const { detail, screenshots } = useSelector(({ game }) => game);
+  const { detail, screenshots, isLoading } = useSelector(({ game }) => game);
   const [platforms, setPlatforms] = useState([]);
+  const [stars, setStars] = useState([]);
 
   useEffect(() => {
     dispatch(getDetail(gameId));
@@ -19,53 +24,77 @@ const GameDetail = ({ gameId }) => {
   useEffect(() => {
     const platform = new Set();
 
-    if (detail) {
+    if (isLoading) {
+      const rating = Math.round(detail.rating);
+
       detail.platforms.forEach(({ platform: item }) => {
         const words = item.name.split(' ');
         platform.add(words[0].toLowerCase());
       });
 
       setPlatforms([...platform]);
-    }
-  }, [detail]);
 
-  if (!detail || !screenshots) {
-    return 'Loading';
+      if (stars.length !== 5) {
+        for (let i = 1; i <= 5; i++) {
+          if (rating >= i) {
+            setStars((prevStars) => [...prevStars, <Star />]);
+          } else {
+            setStars((prevStars) => [...prevStars, <StarEmpty />]);
+          }
+        }
+      }
+    }
+  }, [isLoading, detail, stars]);
+
+  const getPlatform = (platform) => {
+    switch (platform) {
+      case 'pc':
+        return <Windows />;
+      case 'playstation':
+        return <PlayStation />;
+      case 'xbox':
+        return <Xbox />;
+      default:
+        return;
+    }
+  };
+
+  if (!isLoading) {
+    return <Preloader />;
   }
 
   return (
     <Container>
       <Overlay>
-        <Background src={detail.background_image} alt={detail.name} />
+        <Background src={imageResize(detail.background_image, 1280)} alt={detail.name} />
         <Hero>
-          <Title>{detail.name}</Title>
-          <span>{detail.rating}</span>
-
+          <h3>{detail.name}</h3>
+          <Rating>
+            {stars.map((star, i) => (
+              <React.Fragment key={i}>{star}</React.Fragment>
+            ))}
+          </Rating>
           <Platforms>
-            {platforms.map((platform) => {
-              switch (platform) {
-                case 'pc':
-                  return <PC />;
-                case 'playstation':
-                  return <PlayStation />;
-                case 'xbox':
-                  return <Xbox />;
-                default:
-                  return <></>;
-              }
-            })}
+            {platforms.map((platform) => (
+              <React.Fragment key={platform}>{getPlatform(platform)}</React.Fragment>
+            ))}
           </Platforms>
         </Hero>
       </Overlay>
       <About>
-        <AboutTitle>About</AboutTitle>
-        <AboutParagraph>{detail.description}</AboutParagraph>
+        <h4>About</h4>
+        <p>{detail.description_raw}</p>
       </About>
 
       <Screenshots>
-        {screenshots.results.map((screenshot) => (
-          <img key={screenshot.id} src={screenshot.image} alt={detail.name} />
-        ))}
+        <h4>Screenshots</h4>
+        <ScreenshotsWrapper>
+          {screenshots.results.map((screenshot) => (
+            <Screenshot key={screenshot.id}>
+              <img src={imageResize(screenshot.image, 640)} alt={detail.name} />
+            </Screenshot>
+          ))}
+        </ScreenshotsWrapper>
       </Screenshots>
     </Container>
   );
@@ -73,7 +102,11 @@ const GameDetail = ({ gameId }) => {
 
 export default GameDetail;
 
-const Container = styled.div``;
+const Container = styled.div`
+  h4 {
+    font-size: 2.5rem;
+  }
+`;
 const Background = styled.img`
   height: 80vh;
   width: 100%;
@@ -104,23 +137,71 @@ const Hero = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  h3 {
+    font-size: 5rem;
+    text-align: center;
+    line-height: 1;
+  }
 `;
 
-const Title = styled.h3`
-  font-size: 5rem;
+const Rating = styled.div`
+  svg {
+    fill: #222;
+    height: 1.5em;
+    margin: 1.5em 0.5em;
+  }
 `;
 
 const Platforms = styled.div`
   svg {
     fill: #222;
     height: 2em;
-    margin: 1em;
+    margin: 0 1em;
   }
 `;
-const About = styled.div``;
-const AboutTitle = styled.h4`
-  font-size: 2.5rem;
-`;
-const AboutParagraph = styled.p``;
 
-const Screenshots = styled.div``;
+const About = styled.div`
+  max-width: 80%;
+  margin: 2em auto;
+  text-align: center;
+
+  p {
+    font-size: 1.5rem;
+    font-weight: 200;
+    line-height: 1.7;
+  }
+`;
+
+const Screenshots = styled.div`
+  h4 {
+    text-align: center;
+  }
+`;
+
+const ScreenshotsWrapper = styled.div`
+  margin-top: 2em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const Screenshot = styled.div`
+  overflow: hidden;
+
+  img {
+    display: block;
+    transform: scale(1.2);
+    transition: all 0.3s ease-in-out;
+  }
+
+  &:hover {
+    img {
+      transform: scale(1);
+    }
+  }
+`;

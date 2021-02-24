@@ -35,7 +35,6 @@ const GlobalStyles = createGlobalStyle`
         font-size: 1.6rem;
         text-transform: uppercase;
         letter-spacing: 0.2em;
-        font-weight: 200;
         padding-left: 0.4em;
         margin: 1em 0;
 

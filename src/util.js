@@ -23,5 +23,15 @@ const currentMonth = getCurrentMonth();
 const currentDay = getCurrentDay();
 
 export const currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
+
 export const lastYear = `${currentYear - 1}-${currentMonth}-${currentDay}`;
+
 export const nextYear = `${currentYear + 1}-${currentMonth}-${currentDay}`;
+
+export const imageResize = (path, size) => {
+  const newPath = path.match(/media\/screenshots/)
+    ? path.replace('media/screenshots', `media/resize/${size}/-/screenshots`)
+    : path.replace('media/games', `media/resize/${size}/-/games`);
+
+  return newPath;
+};

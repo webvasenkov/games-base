@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { imageResize } from '../util';
 import styled from 'styled-components';
 import GameCard from '../components/GameCard';
 
@@ -18,7 +19,7 @@ const Main = () => {
             slug={game.slug}
             name={game.name}
             released={game.released}
-            image={game.background_image}
+            image={imageResize(game.background_image, 640)}
           />
         ))}
       </Games>
@@ -31,7 +32,7 @@ const Main = () => {
             slug={game.slug}
             name={game.name}
             released={game.released}
-            image={game.background_image}
+            image={imageResize(game.background_image, 640)}
           />
         ))}
       </Games>
@@ -44,7 +45,7 @@ const Main = () => {
             slug={game.slug}
             name={game.name}
             released={game.released}
-            image={game.background_image}
+            image={imageResize(game.background_image, 640)}
           />
         ))}
       </Games>
@@ -62,5 +63,6 @@ const Games = styled(motion.div)`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-column-gap: 3em;
   grid-row-gap: 5em;
+  margin-bottom: 5em;
 `;
 export default Main;
