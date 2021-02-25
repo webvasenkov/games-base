@@ -14,7 +14,7 @@ const Screenshot = ({ id, src, alt }) => {
   };
 
   return (
-    <>
+    <Container>
       {isView ? (
         <Wrapper>
           <Shadow onClick={handleClickShadow} />
@@ -23,9 +23,13 @@ const Screenshot = ({ id, src, alt }) => {
       ) : (
         <Preview src={src} alt={alt} onClick={handleClickView} layoutId={id} />
       )}
-    </>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  overflow: hidden;
+`;
 
 const Shadow = styled(motion.div)`
   position: fixed;
@@ -55,6 +59,9 @@ const View = styled(motion.img)`
   z-index: 2;
 `;
 
-const Preview = styled(motion.img)``;
+const Preview = styled(motion.img)`
+  transition: all 0.2s ease-out;
+  transform: scale(0.6);
+`;
 
 export default Screenshot;
