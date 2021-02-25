@@ -84,7 +84,7 @@ const GameDetail = ({ gameId }) => {
       </Overlay>
       <About>
         <h4>About</h4>
-        <p>{detail.description_raw}</p>
+        <Description dangerouslySetInnerHTML={{ __html: detail.description }} />
       </About>
 
       <Screenshots>
@@ -166,11 +166,13 @@ const About = styled.div`
   max-width: 80%;
   margin: 2em auto;
   text-align: center;
+`;
 
+const Description = styled.div`
+  text-align: left;
+  margin-top: 2em;
   p {
-    font-size: 1.5rem;
-    font-weight: 200;
-    line-height: 1.7;
+    margin-bottom: 2em;
   }
 `;
 

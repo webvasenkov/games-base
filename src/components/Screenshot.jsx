@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { imageResize } from '../util';
 import styled from 'styled-components';
 
 const Screenshot = ({ id, src, alt }) => {
@@ -13,15 +14,19 @@ const Screenshot = ({ id, src, alt }) => {
     setIsView(false);
   };
 
+  const path = imageResize(src, 1280);
+
   return (
     <Container>
       {isView ? (
         <Wrapper>
           <Shadow onClick={handleClickShadow} />
-          <View src={src} alt={alt} layoutId={id} />
+          <View src={path} alt={alt} layoutId={id} />
         </Wrapper>
       ) : (
-        <Preview src={src} alt={alt} onClick={handleClickView} layoutId={id} />
+        <PreviewWrapper layoutId={id}>
+          <Preview src={path} alt={alt} onClick={handleClickView} />
+        </PreviewWrapper>
       )}
     </Container>
   );
@@ -59,10 +64,18 @@ const View = styled(motion.img)`
   z-index: 2;
 `;
 
+const PreviewWrapper = styled(motion.div)`
+  height: 100%;
+`;
+
 const Preview = styled(motion.img)`
   cursor: pointer;
   transition: all 0.2s ease-out;
-  transform: scale(1);
+  display: block;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
 
   &:hover {
     transform: scale(1.1);
