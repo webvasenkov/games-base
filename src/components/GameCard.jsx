@@ -29,7 +29,7 @@ const GameCard = ({ id, slug, name, image }) => {
 const Game = styled(motion.div)`
   min-height: 30vh;
   border-radius: 1em;
-  border: 1px solid #eee;
+  box-shadow: 0px 0px 1px 1px #eee;
   background: #fff;
   transition: all 0.25s ease-in-out;
   overflow: hidden;
@@ -50,6 +50,7 @@ const Game = styled(motion.div)`
       transform: scale(1.1);
     }
 
+    transform: translateY(-2%);
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.15);
   }
 `;

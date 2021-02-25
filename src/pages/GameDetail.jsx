@@ -7,9 +7,10 @@ import { ReactComponent as Xbox } from '../assets/xbox.svg';
 import { ReactComponent as Star } from '../assets/star.svg';
 import { ReactComponent as StarEmpty } from '../assets/star-empty.svg';
 import { imageResize } from '../util';
+import { motion, AnimateSharedLayout } from 'framer-motion';
 import Preloader from '../components/Preloader';
+import Screenshot from '../components/Screenshot';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 
 const GameDetail = ({ gameId }) => {
   const dispatch = useDispatch();
@@ -64,7 +65,7 @@ const GameDetail = ({ gameId }) => {
   }
 
   return (
-    <Container>
+    <Container initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
       <Overlay>
         <Background src={imageResize(detail.background_image, 1280)} alt={detail.name} />
         <Hero>
@@ -89,11 +90,11 @@ const GameDetail = ({ gameId }) => {
       <Screenshots>
         <h4>Screenshots</h4>
         <ScreenshotsWrapper>
-          {screenshots.results.map((screenshot) => (
-            <Screenshot key={screenshot.id}>
-              <img src={imageResize(screenshot.image, 640)} alt={detail.name} />
-            </Screenshot>
-          ))}
+          <AnimateSharedLayout type='crossfade'>
+            {screenshots.results.map((screenshot) => (
+              <Screenshot key={screenshot.id} id={screenshot.id} src={screenshot.image} alt={detail.name} />
+            ))}
+          </AnimateSharedLayout>
         </ScreenshotsWrapper>
       </Screenshots>
     </Container>
@@ -102,7 +103,7 @@ const GameDetail = ({ gameId }) => {
 
 export default GameDetail;
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   h4 {
     font-size: 2.5rem;
   }
@@ -187,21 +188,5 @@ const ScreenshotsWrapper = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-`;
-
-const Screenshot = styled.div`
-  overflow: hidden;
-
-  img {
-    display: block;
-    transform: scale(1.2);
-    transition: all 0.3s ease-in-out;
-  }
-
-  &:hover {
-    img {
-      transform: scale(1);
-    }
   }
 `;

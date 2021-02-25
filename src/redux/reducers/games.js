@@ -1,12 +1,15 @@
 import { api } from '../../api';
 
 const FETCH = 'games/fetch';
+const SEARCH = 'game/search';
+const RESET_SEARCH = 'game/reset_search';
 
 const initialState = {
   all: [],
   popular: [],
   novelty: [],
   upcoming: [],
+  searched: [],
 };
 
 const games = (state = initialState, action) => {
@@ -21,6 +24,10 @@ const games = (state = initialState, action) => {
         ...payload('upcoming'),
       };
     }
+    case SEARCH:
+      return { ...state, searched: action.payload };
+    case RESET_SEARCH:
+      return { ...state, searched: [] };
     default:
       return state;
   }
@@ -31,6 +38,15 @@ export default games;
 const fetchGames = (payload) => ({
   type: FETCH,
   payload,
+});
+
+const search = (payload) => ({
+  type: SEARCH,
+  payload,
+});
+
+export const resetSearch = () => ({
+  type: RESET_SEARCH,
 });
 
 export const getGames = () => async (dispatch) => {
@@ -46,4 +62,9 @@ export const getGames = () => async (dispatch) => {
   };
 
   dispatch(fetchGames(payload));
+};
+
+export const getSearch = (name) => async (dispatch) => {
+  const searched = await api.gameSearch(name);
+  dispatch(search(searched.data.results));
 };

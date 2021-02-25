@@ -25,6 +25,10 @@ class API {
   gameScreenshots(id) {
     return instance(`games/${id}/screenshots`);
   }
+
+  gameSearch(name) {
+    return instance(`games?search=${name}&page_size=10`);
+  }
 }
 
 export const api = new API();
