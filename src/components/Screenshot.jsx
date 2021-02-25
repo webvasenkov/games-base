@@ -60,8 +60,13 @@ const View = styled(motion.img)`
 `;
 
 const Preview = styled(motion.img)`
+  cursor: pointer;
   transition: all 0.2s ease-out;
-  transform: scale(0.6);
+  transform: scale(1);
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 export default Screenshot;
