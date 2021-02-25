@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ReactComponent as Search } from '../assets/search.svg';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getSearch, resetSearch } from '../redux/reducers/games';
 import { motion } from 'framer-motion';
 import background from '../assets/background.jpg';
@@ -8,18 +8,22 @@ import styled, { keyframes } from 'styled-components';
 
 const Header = () => {
   const dispatch = useDispatch();
+  const { searched } = useSelector(({ games }) => games);
   const [text, setText] = useState('');
 
   const handleInputText = (event) => {
     setText(event.target.value);
   };
 
-  const handleClickSearch = (event) => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    event.target.reset();
     dispatch(getSearch(text));
   };
 
   const handleClickLogo = () => {
-    dispatch(resetSearch());
+    if (searched.length) dispatch(resetSearch());
+    return;
   };
 
   const moveDown = {
@@ -35,9 +39,11 @@ const Header = () => {
           <Logo onClick={handleClickLogo}>
             Games <span>| Base</span>
           </Logo>
-          <SearchForm>
+          <SearchForm onSubmit={handleSubmit}>
             <SearchInput placeholder='Search game...' onChange={handleInputText} />
-            <SearchButton onClick={handleClickSearch} />
+            <SearchButton type='submit'>
+              <SearchIcon />
+            </SearchButton>
           </SearchForm>
         </Wrapper>
       </Container>
@@ -122,6 +128,7 @@ const Logo = styled.div`
   cursor: pointer;
 
   span {
+    cursor: pointer;
     font-weight: 200;
   }
 `;
@@ -137,7 +144,7 @@ const SearchInput = styled.input`
   border: none;
   background: #fff;
   font-size: 1rem;
-  padding: 0.7em 1.4em;
+  padding: 0.7em 3em 0.7em 1.5em;
   font-weight: 200;
   font-family: 'Poppins', sans-serif;
   border-radius: 30em;
@@ -149,12 +156,23 @@ const SearchInput = styled.input`
   }
 `;
 
-const SearchButton = styled(Search)`
+const SearchButton = styled.button`
+  background: initial;
+  border: initial;
+  outline: initial;
   position: absolute;
   cursor: pointer;
   right: 1.4em;
   top: 50%;
   transform: translateY(-50%);
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const SearchIcon = styled(Search)`
   width: 1em;
   fill: #222;
 `;
