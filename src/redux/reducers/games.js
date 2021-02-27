@@ -1,8 +1,9 @@
 import { api } from '../../api';
 
 const FETCH = 'games/fetch';
-const SEARCH = 'game/search';
-const RESET_SEARCH = 'game/reset_search';
+const SEARCH = 'games/search';
+const RESET_SEARCH = 'games/reset_search';
+const FILTER = 'games/filter';
 
 const initialState = {
   all: [],
@@ -10,6 +11,13 @@ const initialState = {
   novelty: [],
   upcoming: [],
   searched: [],
+  filtered: {
+    all: [],
+    popular: [],
+    novelty: [],
+    upcoming: [],
+    searched: [],
+  },
 };
 
 const games = (state = initialState, action) => {
@@ -28,6 +36,34 @@ const games = (state = initialState, action) => {
       return { ...state, searched: action.payload };
     case RESET_SEARCH:
       return { ...state, searched: [] };
+    case FILTER: {
+      const filterPlatform = (key) => {
+        if (action.slug === 'all') {
+          return { [key]: state[key] };
+        }
+
+        const searchPlatform = (item) => {
+          for (let i = 0; i < item.platforms.length; i++) {
+            if (item.platforms[i].platform.slug === action.slug) {
+              return true;
+            }
+          }
+        };
+
+        return { [key]: state[key].filter((item) => searchPlatform(item) && item) };
+      };
+
+      return {
+        ...state,
+        filtered: {
+          ...filterPlatform('all'),
+          ...filterPlatform('popular'),
+          ...filterPlatform('novelty'),
+          ...filterPlatform('upcoming'),
+          ...filterPlatform('searched'),
+        },
+      };
+    }
     default:
       return state;
   }
@@ -48,6 +84,46 @@ const search = (payload) => ({
 export const resetSearch = () => ({
   type: RESET_SEARCH,
 });
+
+export const filterGames = (name) => {
+  let slug = '';
+
+  switch (name) {
+    case 'All':
+      slug = 'all';
+      break;
+    case 'Windows':
+      slug = 'pc';
+      break;
+    case 'PlayStation':
+      slug = 'playstation5';
+      break;
+    case 'Xbox':
+      slug = 'xbox-one';
+      break;
+    case 'Nintendo':
+      slug = 'nintendo-switch';
+      break;
+    case 'iOS':
+      slug = 'ios';
+      break;
+    case 'Android':
+      slug = 'android';
+      break;
+    case 'Web':
+      slug = 'web';
+      break;
+    case 'Linux':
+      slug = 'linux';
+      break;
+    default:
+      break;
+  }
+  return {
+    type: FILTER,
+    slug,
+  };
+};
 
 export const getGames = () => async (dispatch) => {
   const popular = await api.popularGames();

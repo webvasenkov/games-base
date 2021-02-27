@@ -1,4 +1,14 @@
 import defaultBackground from './assets/default-background.png';
+import { ReactComponent as Windows } from './assets/windows.svg';
+import { ReactComponent as PlayStation } from './assets/play-station.svg';
+import { ReactComponent as Xbox } from './assets/xbox.svg';
+import { ReactComponent as Android } from './assets/android.svg';
+import { ReactComponent as IOS } from './assets/ios.svg';
+import { ReactComponent as Linux } from './assets/linux.svg';
+import { ReactComponent as Nintendo } from './assets/nintendo.svg';
+import { ReactComponent as Web } from './assets/web.svg';
+import { ReactComponent as Star } from './assets/star.svg';
+import { ReactComponent as StarEmpty } from './assets/star-empty.svg';
 
 const getCurrentMonth = () => {
   const currentMonth = new Date().getMonth();
@@ -40,4 +50,50 @@ export const imageResize = (path, size) => {
     : path.replace('media/games', `media/resize/${size}/-/games`);
 
   return newPath;
+};
+
+export const generatePlatforms = (platforms) => {
+  const platform = new Set();
+
+  platforms.forEach(({ platform: item }) => {
+    const words = item.name.split(' ');
+    platform.add(words[0].toLowerCase());
+  });
+
+  return [...platform].map((item) => {
+    switch (item) {
+      case 'pc':
+        return <Windows key={item} />;
+      case 'playstation':
+        return <PlayStation key={item} />;
+      case 'xbox':
+        return <Xbox key={item} />;
+      case 'android':
+        return <Android key={item} />;
+      case 'ios':
+        return <IOS key={item} />;
+      case 'linux':
+        return <Linux key={item} />;
+      case 'nintendo':
+        return <Nintendo key={item} />;
+      case 'web':
+        return <Web key={item} />;
+      default:
+        return undefined;
+    }
+  });
+};
+
+export const generateStars = (rating) => {
+  const stars = [];
+
+  for (let i = 1; i <= 5; i++) {
+    if (Math.round(rating) >= i) {
+      stars.push(<Star key={i} />);
+    } else {
+      stars.push(<StarEmpty key={i} />);
+    }
+  }
+
+  return stars;
 };

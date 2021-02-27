@@ -3,6 +3,7 @@ import { ReactComponent as Search } from '../assets/search.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSearch, resetSearch } from '../redux/reducers/games';
 import { motion } from 'framer-motion';
+import Filter from './Filter';
 import background from '../assets/background.jpg';
 import styled, { keyframes } from 'styled-components';
 
@@ -17,8 +18,9 @@ const Header = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    event.target.reset();
     dispatch(getSearch(text));
+    setText('');
+    event.target.reset();
   };
 
   const handleClickLogo = () => {
@@ -45,6 +47,7 @@ const Header = () => {
               <SearchIcon />
             </SearchButton>
           </SearchForm>
+          <Filter />
         </Wrapper>
       </Container>
     </HeaderStyled>
@@ -77,7 +80,7 @@ const Container = styled.div`
   position: relative;
   overflow: hidden;
   display: flex;
-  min-height: 70vh;
+  height: 70vh;
   flex-direction: column;
   align-items: center;
 
