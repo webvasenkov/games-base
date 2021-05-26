@@ -3,7 +3,7 @@ import { lastYear, currentDate, nextYear } from './util';
 
 const instance = axios.create({
   baseURL: 'https://api.rawg.io/api/',
-  params: { key: process.env.REACT_APP_RAWG_API_KEY },
+  params: { key: '0c833a938cac4943b4da236f171cba87' },
 });
 
 class API {
