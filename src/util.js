@@ -12,22 +12,12 @@ import { ReactComponent as StarEmpty } from './assets/star-empty.svg';
 
 const getCurrentMonth = () => {
   const currentMonth = new Date().getMonth();
-
-  if (currentMonth < 10) {
-    return `0${currentMonth + 1}`;
-  } else {
-    return currentMonth + 1;
-  }
+  return (currentMonth + 1).toString().padStart(2, '0');
 };
 
 const getCurrentDay = () => {
   const currentDay = new Date().getDate();
-
-  if (currentDay < 10) {
-    return `0${currentDay + 1}`;
-  } else {
-    return currentDay;
-  }
+  return (currentDay + 1).toString().padStart(2, '0');
 };
 
 const currentYear = new Date().getFullYear();
