@@ -43,14 +43,12 @@ const games = (state = initialState, action) => {
         }
 
         const searchPlatform = (item) => {
-          for (let i = 0; i < item.platforms.length; i++) {
-            if (item.platforms[i].platform.slug === action.slug) {
-              return true;
-            }
-          }
+          return item.platforms.some(({platform}) => platform.slug === action.slug);
         };
 
-        return { [key]: state[key].filter((item) => searchPlatform(item) && item) };
+        return {
+          [key]: state[key].filter((item) => searchPlatform(item) && item),
+        };
       };
 
       return {
@@ -131,7 +129,11 @@ export const getGames = () => async (dispatch) => {
   const upcoming = await api.upcomingGames();
 
   const payload = {
-    all: [...popular.data.results, ...novelty.data.results, ...upcoming.data.results],
+    all: [
+      ...popular.data.results,
+      ...novelty.data.results,
+      ...upcoming.data.results,
+    ],
     popular: popular.data.results,
     novelty: novelty.data.results,
     upcoming: upcoming.data.results,

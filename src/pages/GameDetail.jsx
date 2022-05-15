@@ -21,9 +21,16 @@ const GameDetail = ({ gameId }) => {
   }
 
   return (
-    <Container initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+    <Container
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
       <Overlay>
-        <Background src={imageResize(detail.background_image, 1280)} alt={detail.name} />
+        <Background
+          src={imageResize(detail.background_image, 1280)}
+          alt={detail.name}
+        />
         <Hero>
           <h3>{detail.name}</h3>
           <Rating>{generateStars(detail.rating)}</Rating>
@@ -40,7 +47,12 @@ const GameDetail = ({ gameId }) => {
         <ScreenshotsWrapper>
           <AnimateSharedLayout type='crossfade'>
             {screenshots.results.map((screenshot) => (
-              <Screenshot key={screenshot.id} id={screenshot.id} src={screenshot.image} alt={detail.name} />
+              <Screenshot
+                key={screenshot.id}
+                id={screenshot.id}
+                src={screenshot.image}
+                alt={detail.name}
+              />
             ))}
           </AnimateSharedLayout>
         </ScreenshotsWrapper>
@@ -91,6 +103,12 @@ const Hero = styled.div`
     font-size: 5rem;
     text-align: center;
     line-height: 1;
+  }
+
+  @media (max-width: 420px) {
+    h3 {
+      font-size: 2.5rem;
+    }
   }
 `;
 

@@ -47,6 +47,10 @@ const GlobalStyles = createGlobalStyle`
             left: 0;
             top: 0;
         }
+
+        @media (max-width: 420px) { 
+            font-size: 1.1em;
+        }
     }
 `;
 

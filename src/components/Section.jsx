@@ -40,6 +40,12 @@ const Games = styled(motion.div)`
   grid-column-gap: 3em;
   grid-row-gap: 5em;
   margin-bottom: 5em;
+
+  @media (max-width: 720px) {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    grid-row-gap: 3em;
+    margin-bottom: 3em;
+  }
 `;
 
 const NotFound = styled.h3`

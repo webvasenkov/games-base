@@ -42,7 +42,10 @@ const Header = () => {
             Games <span>| Base</span>
           </Logo>
           <SearchForm onSubmit={handleSubmit}>
-            <SearchInput placeholder='Search game...' onChange={handleInputText} />
+            <SearchInput
+              placeholder='Search game...'
+              onChange={handleInputText}
+            />
             <SearchButton type='submit'>
               <SearchIcon />
             </SearchButton>
@@ -87,9 +90,10 @@ const Container = styled.div`
   &::before {
     content: '';
     position: absolute;
+    bottom: 0;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0), rgb(245, 245, 245));
+    height: 50%;
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(245, 245, 245, 1));
     z-index: 0;
   }
 
@@ -102,6 +106,12 @@ const Container = styled.div`
     animation: ${blink} 5s linear infinite;
     z-index: -1;
   }
+
+  @media (max-width: 720px) {
+    &::before {
+      background: none;
+    }
+  }
 `;
 
 const Wrapper = styled(motion.div)`
@@ -110,6 +120,10 @@ const Wrapper = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   width: 50%;
+  @media (max-width: 720px) {
+    width: 100%;
+    padding: 2.5em;
+  }
 `;
 
 const Background = styled.img`
@@ -133,6 +147,10 @@ const Logo = styled.div`
   span {
     cursor: pointer;
     font-weight: 200;
+  }
+
+  @media (max-width: 420px) {
+    font-size: 1.5rem;
   }
 `;
 

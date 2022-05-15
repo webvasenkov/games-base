@@ -41,7 +41,11 @@ const Filter = () => {
     <FilterStyled>
       <List>
         {filterData.map(({ Icon, name }) => (
-          <Item key={name} active={active === name} onClick={handleActiveClick(name)}>
+          <Item
+            key={name}
+            active={active === name}
+            onClick={handleActiveClick(name)}
+          >
             <Icon />
             <Text>{name}</Text>
           </Item>
@@ -61,13 +65,14 @@ const List = styled.ul`
   padding: 0.5em 1.55em;
   border-radius: 1.5em;
   display: flex;
+  flex-wrap: wrap;
   list-style: none;
+  gap: 2em;
 `;
 const Item = styled.li`
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin-right: 2em;
   color: #fff;
   opacity: ${(props) => (props.active ? 1 : 0.5)};
   transition: all 0.3s ease-in-out;

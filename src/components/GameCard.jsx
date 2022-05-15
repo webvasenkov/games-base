@@ -81,6 +81,10 @@ const Game = styled(motion.div)`
       opacity: 1;
     }
   }
+
+  @media (max-width: 720px) {
+    min-width: auto;
+  }
 `;
 
 const ImageWrapper = styled.div`
