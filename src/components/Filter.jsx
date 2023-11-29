@@ -43,9 +43,8 @@ const Filter = () => {
         {filterData.map(({ Icon, name }) => (
           <Item
             key={name}
-            active={active === name}
-            onClick={handleActiveClick(name)}
-          >
+            $active={active === name}
+            onClick={handleActiveClick(name)}>
             <Icon />
             <Text>{name}</Text>
           </Item>
@@ -69,12 +68,13 @@ const List = styled.ul`
   list-style: none;
   gap: 2em;
 `;
+
 const Item = styled.li`
   cursor: pointer;
   display: flex;
   align-items: center;
   color: #fff;
-  opacity: ${(props) => (props.active ? 1 : 0.5)};
+  opacity: ${({ $active }) => ($active ? 1 : 0.5)};
   transition: all 0.3s ease-in-out;
 
   svg {

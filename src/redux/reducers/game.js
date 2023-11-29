@@ -7,7 +7,7 @@ const IS_LOADING = `game/is_loading`;
 const initialState = {
   detail: null,
   screenshots: null,
-  isLoading: false,
+  isLoading: true,
 };
 
 const game = (state = initialState, action) => {
@@ -40,12 +40,12 @@ const isLoading = (isLoading) => ({
   isLoading,
 });
 
-export const getDetail = (id) => async (dispatch) => {
-  dispatch(isLoading(false));
-  const { data: detail } = await api.gameDetails(id);
-  const { data: screenshots } = await api.gameScreenshots(id);
+export const getDetail = (slug) => async (dispatch) => {
+  dispatch(isLoading(true));
+  const { data: detail } = await api.gameDetails(slug);
+  const { data: screenshots } = await api.gameScreenshots(slug);
 
   dispatch(fetchDetail(detail));
   dispatch(fetchScreenshots(screenshots));
-  dispatch(isLoading(true));
+  dispatch(isLoading(false));
 };

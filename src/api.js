@@ -12,19 +12,23 @@ class API {
   }
 
   noveltyGames() {
-    return instance(`games?dates=${currentDate},${nextYear}&ordering=-added&page_size=10`);
+    return instance(
+      `games?dates=${currentDate},${nextYear}&ordering=-added&page_size=10`,
+    );
   }
 
   upcomingGames() {
-    return instance(`games?dates=${lastYear},${currentDate}&ordering=-released&page_size=10`);
+    return instance(
+      `games?dates=${lastYear},${currentDate}&ordering=-released&page_size=10`,
+    );
   }
 
-  gameDetails(id) {
-    return instance(`games/${id}`);
+  gameDetails(slug) {
+    return instance(`games/${slug}`);
   }
 
-  gameScreenshots(id) {
-    return instance(`games/${id}/screenshots`);
+  gameScreenshots(slug) {
+    return instance(`games/${slug}/screenshots`);
   }
 
   gameSearch(name) {

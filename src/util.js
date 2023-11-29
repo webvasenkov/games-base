@@ -45,7 +45,7 @@ export const imageResize = (path, size) => {
 export const generatePlatforms = (platforms) => {
   const platform = new Set();
 
-  platforms.forEach(({ platform: item }) => {
+  platforms?.forEach(({ platform: item }) => {
     const words = item.name.split(' ');
     platform.add(words[0].toLowerCase());
   });

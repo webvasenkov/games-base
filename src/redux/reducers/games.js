@@ -4,6 +4,7 @@ const FETCH = 'games/fetch';
 const SEARCH = 'games/search';
 const RESET_SEARCH = 'games/reset_search';
 const FILTER = 'games/filter';
+const IS_LOADING = `games/is_loading`;
 
 const initialState = {
   all: [],
@@ -18,6 +19,7 @@ const initialState = {
     upcoming: [],
     searched: [],
   },
+  isLoading: true,
 };
 
 const games = (state = initialState, action) => {
@@ -43,7 +45,9 @@ const games = (state = initialState, action) => {
         }
 
         const searchPlatform = (item) => {
-          return item.platforms.some(({platform}) => platform.slug === action.slug);
+          return item.platforms?.some(
+            ({ platform }) => platform.slug === action.slug,
+          );
         };
 
         return {
@@ -62,6 +66,8 @@ const games = (state = initialState, action) => {
         },
       };
     }
+    case IS_LOADING:
+      return { ...state, isLoading: action.isLoading };
     default:
       return state;
   }
@@ -123,7 +129,13 @@ export const filterGames = (name) => {
   };
 };
 
+const isLoading = (isLoading) => ({
+  type: IS_LOADING,
+  isLoading,
+});
+
 export const getGames = () => async (dispatch) => {
+  dispatch(isLoading(true));
   const popular = await api.popularGames();
   const novelty = await api.noveltyGames();
   const upcoming = await api.upcomingGames();
@@ -140,6 +152,7 @@ export const getGames = () => async (dispatch) => {
   };
 
   dispatch(fetchGames(payload));
+  dispatch(isLoading(false));
 };
 
 export const getSearch = (name) => async (dispatch) => {

@@ -2,62 +2,68 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getDetail } from '../redux/reducers/game';
 import { imageResize } from '../util';
-import { motion, AnimateSharedLayout } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { generatePlatforms, generateStars } from '../util';
 import Preloader from '../components/Preloader';
 import Screenshot from '../components/Screenshot';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
 
-const GameDetail = ({ gameId }) => {
+const GameDetail = () => {
+  const { slug } = useParams();
   const dispatch = useDispatch();
   const { detail, screenshots, isLoading } = useSelector(({ game }) => game);
 
   useEffect(() => {
-    dispatch(getDetail(gameId));
-  }, [dispatch, gameId]);
+    if (!detail) {
+      dispatch(getDetail(slug));
+    }
+  }, [slug]);
 
-  if (!isLoading) {
-    return <Preloader />;
-  }
+  console.log(detail);
 
   return (
-    <Container
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-    >
-      <Overlay>
-        <Background
-          src={imageResize(detail.background_image, 1280)}
-          alt={detail.name}
-        />
-        <Hero>
-          <h3>{detail.name}</h3>
-          <Rating>{generateStars(detail.rating)}</Rating>
-          <Platforms>{generatePlatforms(detail.platforms)}</Platforms>
-        </Hero>
-      </Overlay>
-      <About>
-        <h4>About</h4>
-        <Description dangerouslySetInnerHTML={{ __html: detail.description }} />
-      </About>
+    <>
+      {isLoading && <Preloader />}
+      {!isLoading && (
+        <Container
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}>
+          <Overlay>
+            <Background
+              src={imageResize(detail.background_image, 1280)}
+              alt={detail.name}
+            />
+            <Hero>
+              <h3>{detail.name}</h3>
+              <Rating>{generateStars(detail.rating)}</Rating>
+              <Platforms>{generatePlatforms(detail.platforms)}</Platforms>
+            </Hero>
+          </Overlay>
+          <About>
+            <h4>About</h4>
+            <Description
+              dangerouslySetInnerHTML={{ __html: detail.description }}
+            />
+          </About>
 
-      <Screenshots>
-        <h4>Screenshots</h4>
-        <ScreenshotsWrapper>
-          <AnimateSharedLayout type='crossfade'>
-            {screenshots.results.map((screenshot) => (
-              <Screenshot
-                key={screenshot.id}
-                id={screenshot.id}
-                src={screenshot.image}
-                alt={detail.name}
-              />
-            ))}
-          </AnimateSharedLayout>
-        </ScreenshotsWrapper>
-      </Screenshots>
-    </Container>
+          <Screenshots>
+            <h4>Screenshots</h4>
+            <ScreenshotsWrapper>
+              {screenshots.results.map((screenshot) => (
+                <Screenshot
+                  key={screenshot.id}
+                  id={screenshot.id}
+                  src={screenshot.image}
+                  alt={detail?.name}
+                />
+              ))}
+            </ScreenshotsWrapper>
+          </Screenshots>
+        </Container>
+      )}
+    </>
   );
 };
 

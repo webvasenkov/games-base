@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getGames } from './redux/reducers/games';
 import GlobalStyles from './components/GlobalStyles';
@@ -9,35 +9,27 @@ import GameDetail from './pages/GameDetail';
 
 const App = () => {
   const dispatch = useDispatch();
-  const { all: games } = useSelector(({ games }) => games);
+  const { all: games, isLoading } = useSelector(({ games }) => games);
 
   useEffect(() => {
-    dispatch(getGames());
-  }, [dispatch]);
-
-  if (!games.length) {
-    return <Preloader />;
-  }
+    if (!games.length) {
+      dispatch(getGames());
+    }
+  }, []);
 
   return (
-    <div className='app'>
-      <GlobalStyles />
-      <Switch>
-        <Route exact path='/' component={Main} />
-        <Route
-          path='/:slug'
-          render={({ match }) => {
-            let gameId;
-            games.forEach((game) => {
-              if (game.slug === match.params.slug) {
-                gameId = game.id;
-              }
-            });
-            return <GameDetail gameId={gameId} />;
-          }}
-        />
-      </Switch>
-    </div>
+    <>
+      {isLoading && <Preloader />}
+      {!isLoading && (
+        <div className='app'>
+          <GlobalStyles />
+          <Routes>
+            <Route exact path='/' element={<Main />} />
+            <Route path='/:slug' element={<GameDetail />} />
+          </Routes>
+        </div>
+      )}
+    </>
   );
 };
 
